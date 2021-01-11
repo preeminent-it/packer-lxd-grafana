@@ -80,7 +80,7 @@ build {
   // Create self-signed certificate
   provisioner "shell" {
     inline = [
-      "openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout /etc/grafana/tls/server.key -out /etc/grafana/tls/server.crt -subj \"/CN=grafana\""
+      "openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout /etc/nginx/tls/server.key -out /etc/nginx/tls/server.crt -subj \"/CN=grafana\""
     ]
   }
 
@@ -91,6 +91,20 @@ build {
       "echo \"deb https://packages.grafana.com/oss/deb stable main\" | sudo tee -a /etc/apt/sources.list.d/grafana.list",
       "apt-get update -qq",
       "DEBIAN_FRONTEND=noninteractive apt-get install -qq grafana=${var.grafana_version} < /dev/null > /dev/null"
+    ]
+  }
+
+  // Add Grafana Nginx config
+  provisioner "file" {
+    source      = "files/etc/nginx/sites-available/grafana"
+    destination = "/etc/nginx/sites-available/grafana"
+  }
+
+  // Enable Grafana Nginx config
+  provisioner "shell" {
+    inline = [
+      "rm /etc/nginx/sites-enabled/default",
+      "ln -s /etc/nginx/sites-available/grafana /etc/nginx/sites-enabled/grafana"
     ]
   }
 
