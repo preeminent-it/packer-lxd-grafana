@@ -34,6 +34,7 @@ build {
       "DEBIAN_FRONTEND=noninteractive apt-get install -qq grafana=${var.grafana_version} nginx < /dev/null > /dev/null"
     ]
   }
+
   // Add Grafana provisioning config
   provisioner "file" {
     source      = "files/etc/grafana/provisioning"
