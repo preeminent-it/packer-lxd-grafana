@@ -1,1 +1,0 @@
-OPTIONS="--config.file /etc/prometheus/prometheus.yaml --storage.tsdb.path /opt/prometheus"
